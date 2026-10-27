@@ -1,16 +1,25 @@
+
 workflows:
   android-apk:
     name: ZuryaPay Android APK
     max_build_duration: 60
     instance_type: mac_mini_m2
+
     environment:
       flutter: stable
+
     scripts:
       - name: Generate Android project files
-        script: flutter create --platforms=android .
+        script: |
+          if [ ! -f android/gradlew ]; then
+            flutter create --platforms=android .
+          fi
+
       - name: Install dependencies
         script: flutter pub get
+
       - name: Build optimized APKs
-        script: flutter build apk --release --split-per-abi --obfuscate --split-debug-info=build/debug-info
+        script: flutter build apk --release --split-per-abi
+
     artifacts:
       - build/app/outputs/flutter-apk/*.apk
